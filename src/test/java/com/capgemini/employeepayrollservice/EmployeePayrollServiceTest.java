@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class EmployeePayrollServiceTest {
 	@Before
@@ -27,14 +28,40 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollData[] arrayOfEmps=new Gson().fromJson(response.asString(),EmployeePayrollData[].class);
 		return arrayOfEmps;
 	}
-	//UC1....
+	//UC4....
+//	@Test
+//	public void givenEmployeeDataInJsonServer_WhenRetrieved_ShouldMatchTheCount() {
+//		EmployeePayrollData[] arrayOfEmps=getEmployeeList();
+//		EmployeePayrollService employeePayrollService;
+//		employeePayrollService=new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+//		long entries=employeePayrollService.countNumberOfEmployees(IOService.REST_IO);
+//		assertEquals(5,entries);
+//	}
+	//UC1..
 	@Test
-	public void givenEmployeeDataInJsonServer_WhenRetrieved_ShouldMatchTheCount() {
-		EmployeePayrollData[] arrayOfEmps=getEmployeeList();
+	public void givenNewEmployee_WhenAdded_ShouldMatch201ResponseAndCount() {
 		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData[] arrayOfEmps=getEmployeeList();
 		employeePayrollService=new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		EmployeePayrollData employeePayrollData=new EmployeePayrollData(10,"Mark",30000.0);
+		
+		Response response=addEmployeeToJsonServer(employeePayrollData);
+		int statusCode=response.getStatusCode();
+		assertEquals(201,statusCode);
+		
+		employeePayrollData=new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+		employeePayrollService.addEmployeeToPayroll(employeePayrollData);
 		long entries=employeePayrollService.countNumberOfEmployees(IOService.REST_IO);
-		assertEquals(5,entries);
+		assertEquals(6,entries);
+		
+	}
+	private Response addEmployeeToJsonServer(EmployeePayrollData employeePayrollData) {
+		// TODO Auto-generated method stub
+		String empJson=new Gson().toJson(employeePayrollData);
+		RequestSpecification request=RestAssured.given();
+		request.header("Content-Type","application/json");
+		request.body(empJson);
+		return request.post("/employees");
 	}
 	
 //	//UC2 Database..

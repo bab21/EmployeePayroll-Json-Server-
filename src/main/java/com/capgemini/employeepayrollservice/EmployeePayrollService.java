@@ -88,4 +88,8 @@ public class EmployeePayrollService {
 		// TODO Auto-generated method stub
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name,salary,startDate,gender,company_id,departments));
 	}
+	public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData) {
+		employeePayrollList.add(employeePayrollData);
+		
+	}
 }
