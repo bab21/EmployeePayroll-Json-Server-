@@ -80,22 +80,39 @@ public class EmployeePayrollServiceTest {
 //		
 //	}
 	
+//	@Test
+//	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200Response() {
+//		EmployeePayrollService employeePayrollService;
+//		EmployeePayrollData[] arrayOfEmps=getEmployeeList();
+//		employeePayrollService=new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+//		
+//		employeePayrollService.updateEmployeeSalary("Max",15600.0,IOService.REST_IO);
+//		EmployeePayrollData employeePayrollData=employeePayrollService.getEmployeePayrollData("Max",IOService.REST_IO);
+//		
+//		String empJson=new Gson().toJson(employeePayrollData);
+//		RequestSpecification request=RestAssured.given();
+//		request.header("Content-Type","application/json");
+//		request.body(empJson);
+//		Response response=request.put("/employees/"+employeePayrollData.id);
+//		int statusCode=response.getStatusCode();
+//		assertEquals(200,statusCode);
+//		
+//	}
 	@Test
-	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200Response() {
+	public void givenEmployeeToDelete_WhenDeleted_ShouldMatch200ResponseAndCount() {
 		EmployeePayrollService employeePayrollService;
 		EmployeePayrollData[] arrayOfEmps=getEmployeeList();
 		employeePayrollService=new EmployeePayrollService(Arrays.asList(arrayOfEmps));
-		
-		employeePayrollService.updateEmployeeSalary("Max",15600.0,IOService.REST_IO);
-		EmployeePayrollData employeePayrollData=employeePayrollService.getEmployeePayrollData("Max",IOService.REST_IO);
-		
-		String empJson=new Gson().toJson(employeePayrollData);
+		EmployeePayrollData employeePayrollData=employeePayrollService.getEmployeePayrollData("Babli", IOService.REST_IO);
 		RequestSpecification request=RestAssured.given();
 		request.header("Content-Type","application/json");
-		request.body(empJson);
-		Response response=request.put("/employees/"+employeePayrollData.id);
+		Response response=request.delete("/employees/"+employeePayrollData.id);
 		int statusCode=response.getStatusCode();
 		assertEquals(200,statusCode);
+		
+		employeePayrollService.deleteEmployee(employeePayrollData.name,IOService.REST_IO);
+		long entries=employeePayrollService.countNumberOfEmployees(IOService.REST_IO);
+		assertEquals(8,entries);
 		
 	}
 	private Response addEmployeeToJsonServer(EmployeePayrollData employeePayrollData) {

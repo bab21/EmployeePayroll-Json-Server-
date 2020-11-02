@@ -109,4 +109,7 @@ public class EmployeePayrollService {
 				.collect(Collectors.toList());
 		return employeeList.get(0);
 	}
+	public void deleteEmployee(String name, IOService ioService) {
+		employeePayrollList.remove(getEmployeePayrollData(name,ioService));
+	}
 }
