@@ -23,7 +23,7 @@ public class EmployeePayrollServiceTest {
 	}
 	public  EmployeePayrollData[] getEmployeeList() {
 		Response response=RestAssured.get("/employees");
-		System.out.println("Employee Entries in jsonserver:\n"+response.asString());
+		System.out.println("Employee Data at jsonserver:\n"+response.asString());
 		EmployeePayrollData[] arrayOfEmps=new Gson().fromJson(response.asString(),EmployeePayrollData[].class);
 		return arrayOfEmps;
 	}
