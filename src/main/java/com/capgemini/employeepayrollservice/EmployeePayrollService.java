@@ -1,5 +1,6 @@
 package com.capgemini.employeepayrollservice;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.capgemini.employeepayrollservice.model.EmployeePayrollData;
 
@@ -91,5 +92,21 @@ public class EmployeePayrollService {
 	public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData) {
 		employeePayrollList.add(employeePayrollData);
 		
+	}
+	public void updateEmployeeSalary(String name, double salary, IOService restIo) {
+		// TODO Auto-generated method stub
+		System.out.println("in update "+employeePayrollList.size());
+		List<EmployeePayrollData> employeeList=this.employeePayrollList.stream()
+				.filter(element -> element.name.equals(name))
+				.collect(Collectors.toList());
+		for(EmployeePayrollData element:employeeList) {
+			element.salary=salary;
+		}
+	}
+	public EmployeePayrollData getEmployeePayrollData(String name,IOService ioService) {
+		List<EmployeePayrollData> employeeList=employeePayrollList.stream()
+				.filter(element->element.name.equals(name))
+				.collect(Collectors.toList());
+		return employeeList.get(0);
 	}
 }
